@@ -1,0 +1,140 @@
+<!DOCTYPE html> 
+<html lang="en"> <head>     
+	<meta charset="UTF-8">
+	<title>baidu</title>     
+<style type="text/css">     
+	*{         
+		margin:0;
+		padding:0;         
+		box-sizing: border-box;         
+		text-decoration:none;     
+	}
+	a{
+		color:black;
+	}
+	.logobox{         
+		width:270px;         
+		margin:185px auto 20px;
+     }
+	.main{         
+		width:640px;         
+		margin:0 auto;     
+	}     
+	.mainbox{
+	display: inline-block;         
+	width:540px;         
+	height:36px;
+	border:1px solid #b6b6b6;         
+	vertical-align:top;         
+	border-right:none;         
+	padding-top:5px;
+	padding-left:8px;     
+	}
+	.borcol{
+		border-color:#4791FF;
+		/*border-right:none;*/
+	}  
+	.keyup{
+		border-top-color:#4791FF;
+		border-left-color:#4791FF;
+	}  
+	input{         
+		width:500px;
+		height:22px;
+		border:none;
+		font-size:16px;
+		outline: none;
+	}
+	.pic{
+		display: inline-block;
+		width:18px;
+		height:16px;
+		vertical-align: middle;
+		margin-left:2px; 
+		background: url('img/camera.png');
+		cursor:pointer;
+	}
+	.pic:hover{
+		background-position: 0 18px; 
+	}
+	#btn{
+		width:100px;
+		height:36px;
+		border:none;
+		background: #4791ff;
+		color:white;
+		font-size: 15px;
+		cursor:pointer;
+		outline: none;
+	}
+	#btn:hover{
+		background: #3385FF;
+	}
+	#show{
+		width:640px;
+		border:1px solid #b6b6b6;
+		border-top:none;
+		display: none;
+	}
+	.content{
+		padding-left:5px;
+	}
+	</style>
+</head>
+<body>
+	<div class="logobox">
+		<img src="img/logo.png" width=270px />
+	</div>
+	<div class="main">
+	<span class="mainbox"><input type="text" id="inp"><span class="pic"></span></span><button id="btn">百度一下</button>
+	<div id="show"></div>
+	</div>
+</body>
+<script src="JQ/jquery-3.2.1.js"></script>
+<script type="text/javascript">
+$(function(){
+	$(".mainbox").on("click","#inp",function(){
+		$(".mainbox").addClass("borcol");
+	});
+	$("#inp").blur(function(){
+		$(".mainbox").removeClass("borcol keyup");
+		$("#show").hide();
+	})
+	$("#inp").keyup(function(e){
+		var key=$(this).val();
+		$(".mainbox").removeClass("borcol").addClass("keyup");
+		$.get({
+			url:'https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd='+key,
+			dataType:'jsonp',
+			jsonp:'cb',
+			success:function(data){
+				$("#show").empty();
+				//console.log(data);
+				var res=data.s;
+				console.log(res);
+				if(res.length==0){
+					$("#show").hide();
+					$(".mainbox").addClass("borcol");
+				}else{
+					$.each(res,function(k,v){//k为索引v为值
+					var a=$("<a href='https://www.baidu.com/s?ie=utf-8&wd="+v+"'></a>");
+					var p=$("<p></p>");
+					a.html(v);
+					p.append(a);
+					$("#show").append(p);		
+				})
+					$("#show").show();
+				}
+
+			}
+
+		})
+		
+	})
+	$("#btn").click(function(){
+		var key=$("#inp").val();
+		window.location.href='https://www.baidu.com/s?ie=utf-8&wd='+key;
+	});
+})
+</script>
+</html>
